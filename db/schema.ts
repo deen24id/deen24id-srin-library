@@ -21,3 +21,4 @@ export const member = pgTable("member", {
     .defaultNow()
     .notNull(),
 });
+export type SelectMember = typeof member.$inferSelect;
