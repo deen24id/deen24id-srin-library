@@ -13,6 +13,8 @@ async function main() {
         name: f.fullName(),
         email: f.email(),
         phone: f.phoneNumber(),
+        country: f.country(),
+        city: f.city(),
       },
     },
   }));

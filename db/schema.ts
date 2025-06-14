@@ -12,4 +12,6 @@ export const member = pgTable("member", {
   name: varchar({ length: 255 }).notNull(),
   email: citext().notNull(),
   phone: varchar({ length: 31 }).notNull(),
+  country: varchar({ length: 64 }),
+  city: varchar({ length: 64 }),
 });
