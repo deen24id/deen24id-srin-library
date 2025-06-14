@@ -1,6 +1,5 @@
 import { SeparatorFull } from "@/components/ui/separator";
 import { H1, P } from "@/components/ui/typography";
-import { cn } from "@/lib/utils";
 
 export default function NotFound() {
   return (
