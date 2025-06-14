@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { IconBrandGithub } from "@tabler/icons-react";
+import Link from "next/link";
 
 export function SiteHeader() {
   return (
@@ -13,15 +15,16 @@ export function SiteHeader() {
         />
         <h1 className="text-base font-medium">Documents</h1>
         <div className="ml-auto flex items-center gap-2">
-          <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
-            <a
+          <Button variant="ghost" asChild size="sm">
+            <Link
               href="https://github.com/deen24id/deen24id-srin-library"
               rel="noopener noreferrer"
               target="_blank"
               className="dark:text-foreground"
             >
-              GitHub
-            </a>
+              <IconBrandGithub />
+              <span className="hidden lg:inline">GitHub</span>
+            </Link>
           </Button>
         </div>
       </div>
