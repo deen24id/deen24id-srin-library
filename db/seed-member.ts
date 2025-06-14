@@ -15,6 +15,7 @@ async function main() {
         phone: f.phoneNumber(),
         country: f.country(),
         city: f.city(),
+        lastUpdatedAt: f.default({ defaultValue: new Date() }),
       },
     },
   }));
