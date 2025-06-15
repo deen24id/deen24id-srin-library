@@ -10,6 +10,7 @@ async function main() {
     member: {
       count: 100,
       columns: {
+        status: f.default({ defaultValue: "CREATED" }),
         name: f.fullName(),
         email: f.email(),
         phone: f.phoneNumber(),

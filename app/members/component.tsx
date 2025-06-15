@@ -25,14 +25,25 @@ import { H1 } from "@/components/ui/typography";
 import { SelectMember } from "@/db/schema";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
-import { useState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import { deleteMember } from "../actions/delete-member";
 
 export function TableCellViewer({
   variant,
   ...member
 }: { variant: "edit" | "delete" } & SelectMember) {
   const isMobile = useIsMobile();
+
   const [isChecked, setIsCheck] = useState(false);
+
+  const [state, deleteMemberAction] = useActionState(deleteMember, null);
+
+  const formAction = (formData: FormData) => {
+    formData.set("id", member.id); //value didn't get passed when input disabled
+    if (variant === "delete") {
+      deleteMemberAction(formData);
+    }
+  };
 
   return (
     <Drawer direction={isMobile ? "bottom" : "right"}>
@@ -63,37 +74,41 @@ export function TableCellViewer({
           </DrawerDescription>
         </DrawerHeader>
         <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
-          <form className="flex flex-col gap-4">
+          <form
+            id="form-drawer"
+            className="flex flex-col gap-4"
+            action={formAction}
+          >
             <div className="flex flex-col gap-3">
               <Label htmlFor="id">ID</Label>
-              <Input id="id" defaultValue={member.id} disabled />
+              <Input name="id" defaultValue={member.id} disabled />
             </div>
             <div className="flex flex-col gap-3">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" defaultValue={member.name} />
+              <Input name="name" defaultValue={member.name} />
             </div>
             <div className="flex flex-col gap-3">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" defaultValue={member.email} />
+              <Input name="email" defaultValue={member.email} />
             </div>
             <div className="flex flex-col gap-3">
               <Label htmlFor="phone">Phone</Label>
-              <Input id="phone" defaultValue={member.phone} />
+              <Input name="phone" defaultValue={member.phone} />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
                 <Label htmlFor="country">Country</Label>
-                <Input id="country" defaultValue={member.country || ""} />
+                <Input name="country" defaultValue={member.country || ""} />
               </div>
               <div className="flex flex-col gap-3">
                 <Label htmlFor="city">City</Label>
-                <Input id="city" defaultValue={member.city || ""} />
+                <Input name="city" defaultValue={member.city || ""} />
               </div>
             </div>
           </form>
         </div>
         <DrawerFooter>
-          {variant === "edit" && <Button>Save Changes</Button>}
+          {variant === "edit" && <Button type="submit">Save Changes</Button>}
           {variant === "delete" && (
             <>
               <div className="w-full flex items-center justify-center gap-3">
@@ -103,7 +118,12 @@ export function TableCellViewer({
                 />
                 <Label>Yes, delete this member from the list.</Label>
               </div>
-              <Button variant={"destructive"} disabled={!isChecked}>
+              <Button
+                variant={"destructive"}
+                disabled={!isChecked}
+                form="form-drawer"
+                type="submit"
+              >
                 Delete
               </Button>
             </>

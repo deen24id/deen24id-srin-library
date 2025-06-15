@@ -11,13 +11,15 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { member } from "@/db/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { TableCellViewer } from "./component";
-import { Button } from "@/components/ui/button";
-import { IconDotsVertical } from "@tabler/icons-react";
+import { eq } from "drizzle-orm";
 
 const db = drizzle(process.env.DATABASE_URL!);
 
 export default async function Page() {
-  const memberData = await db.select().from(member);
+  const memberData = await db
+    .select()
+    .from(member)
+    .where(eq(member.status, "CREATED"));
 
   return (
     <div className="flex flex-1 flex-col">
