@@ -11,6 +11,8 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { member } from "@/db/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { TableCellViewer } from "./component";
+import { Button } from "@/components/ui/button";
+import { IconDotsVertical } from "@tabler/icons-react";
 
 const db = drizzle(process.env.DATABASE_URL!);
 
@@ -33,6 +35,7 @@ export default async function Page() {
                 <Table>
                   <TableHeader className="bg-muted sticky top-0 z-10">
                     <TableRow className="w-full">
+                      <TableHead></TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Email</TableHead>
                       <TableHead>Phone</TableHead>
@@ -45,6 +48,9 @@ export default async function Page() {
                       <TableRow key={val.id}>
                         <TableCell>
                           <TableCellViewer {...val} />
+                        </TableCell>
+                        <TableCell className="font-semibold">
+                          {val.name}
                         </TableCell>
                         <TableCell>{val.email}</TableCell>
                         <TableCell>{val.phone}</TableCell>

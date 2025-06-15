@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/drawer";
 import { SelectMember } from "@/db/schema";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { IconDotsVertical } from "@tabler/icons-react";
 
 export function TableCellViewer(member: SelectMember) {
   const isMobile = useIsMobile();
@@ -19,8 +20,13 @@ export function TableCellViewer(member: SelectMember) {
   return (
     <Drawer direction={isMobile ? "bottom" : "right"}>
       <DrawerTrigger asChild>
-        <Button variant="link" className="text-foreground w-fit px-0 text-left">
-          {member.name}
+        <Button
+          variant="outline"
+          className="text-muted-foreground flex size-8"
+          size="icon"
+        >
+          <IconDotsVertical />
+          <span className="sr-only">Open menu</span>
         </Button>
       </DrawerTrigger>
       <DrawerContent>
