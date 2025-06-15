@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { IconBrandGithub } from "@tabler/icons-react";
+import { RootText } from "@/hooks/use-root";
 import Link from "next/link";
 
 export function SiteHeader() {
@@ -13,7 +14,9 @@ export function SiteHeader() {
           orientation="vertical"
           className="mx-2 data-[orientation=vertical]:h-4"
         />
-        <h1 className="text-base font-medium">Documents</h1>
+        <h1 className="text-base font-medium">
+          <RootText />
+        </h1>
         <div className="ml-auto flex items-center gap-2">
           <Button variant="ghost" asChild size="sm">
             <Link
