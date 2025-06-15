@@ -47,7 +47,10 @@ export default async function Page() {
                     {memberData.map((val) => (
                       <TableRow key={val.id}>
                         <TableCell>
-                          <TableCellViewer {...val} />
+                          <div className="flex gap-1">
+                            <TableCellViewer variant="edit" {...val} />
+                            <TableCellViewer variant="delete" {...val} />
+                          </div>
                         </TableCell>
                         <TableCell className="font-semibold">
                           {val.name}
