@@ -30,11 +30,6 @@ const data = {
   },
   navMain: [
     {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: IconDashboard,
-    },
-    {
       title: "Books",
       url: "/books",
       icon: IconBook,
@@ -53,6 +48,11 @@ const data = {
       title: "Borrowed Books",
       url: "/borrowed-books",
       icon: IconBookFilled,
+    },
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: IconDashboard,
     },
   ],
 };
