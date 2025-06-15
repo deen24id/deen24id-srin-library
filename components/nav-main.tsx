@@ -1,7 +1,5 @@
 "use client";
 
-import { type Icon } from "@tabler/icons-react";
-
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -10,6 +8,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { type Icon } from "@tabler/icons-react";
+import { useRootPath } from "@/hooks/use-root";
 
 export function NavMain({
   items,
@@ -20,6 +20,7 @@ export function NavMain({
     icon?: Icon;
   }[];
 }) {
+  const rootPath = useRootPath();
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -27,7 +28,10 @@ export function NavMain({
           {items.map((item) => (
             <Link href={item.url} key={item.title}>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip={item.title}>
+                <SidebarMenuButton
+                  isActive={item.url === rootPath}
+                  tooltip={item.title}
+                >
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                 </SidebarMenuButton>
