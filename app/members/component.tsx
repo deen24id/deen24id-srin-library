@@ -43,6 +43,9 @@ export function TableCellViewer({
     useActionState(createMember, null);
 
   const formAction = (formData: FormData) => {
+    console.log(formData.get("name"));
+    console.log(member.name);
+
     if (variant === "create") {
       createMemberAction(formData);
     } else if (variant === "delete") {
@@ -122,29 +125,48 @@ export function TableCellViewer({
             {variant !== "create" && (
               <div className="flex flex-col gap-3">
                 <Label htmlFor="id">ID</Label>
-                <Input name="id" defaultValue={member.id} disabled />
+                <Input id="id" name="id" defaultValue={member.id} disabled />
               </div>
             )}
             <div className="flex flex-col gap-3">
               <Label htmlFor="name">Name</Label>
-              <Input name="name" defaultValue={member.name} required />
+              <Input
+                id="name"
+                name="name"
+                defaultValue={member.name}
+                required
+              />
             </div>
             <div className="flex flex-col gap-3">
               <Label htmlFor="email">Email</Label>
-              <Input name="email" defaultValue={member.email} required />
+              <Input
+                id="email"
+                name="email"
+                defaultValue={member.email}
+                required
+              />
             </div>
             <div className="flex flex-col gap-3">
               <Label htmlFor="phone">Phone</Label>
-              <Input name="phone" defaultValue={member.phone} required />
+              <Input
+                id="phone"
+                name="phone"
+                defaultValue={member.phone}
+                required
+              />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
                 <Label htmlFor="country">Country</Label>
-                <Input name="country" defaultValue={member.country || ""} />
+                <Input
+                  id="country"
+                  name="country"
+                  defaultValue={member.country || ""}
+                />
               </div>
               <div className="flex flex-col gap-3">
                 <Label htmlFor="city">City</Label>
-                <Input name="city" defaultValue={member.city || ""} />
+                <Input id="city" name="city" defaultValue={member.city || ""} />
               </div>
             </div>
           </form>
@@ -162,7 +184,11 @@ export function TableCellViewer({
               Create
             </Button>
           )}
-          {variant === "edit" && <Button type="submit">Save Changes</Button>}
+          {variant === "edit" && (
+            <Button form="form-drawe" type="submit">
+              Save Changes
+            </Button>
+          )}
           {variant === "delete" && (
             <>
               <div className="w-full flex items-center justify-center gap-3">
