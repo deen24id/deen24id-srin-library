@@ -24,6 +24,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { createMember } from "../actions/create-member";
+import { Loader2Icon } from "lucide-react";
 
 export function TableCellViewer({
   variant,
@@ -33,14 +34,10 @@ export function TableCellViewer({
 
   const [isChecked, setIsCheck] = useState(false);
 
-  const [deleteMemberState, deleteMemberAction] = useActionState(
-    deleteMember,
-    null
-  );
-  const [createMemberState, createMemberAction] = useActionState(
-    createMember,
-    null
-  );
+  const [deleteMemberState, deleteMemberAction, deleteMemberIsPending] =
+    useActionState(deleteMember, null);
+  const [createMemberState, createMemberAction, createMemberIsPending] =
+    useActionState(createMember, null);
 
   const formAction = (formData: FormData) => {
     if (variant === "create") {
@@ -136,7 +133,14 @@ export function TableCellViewer({
         </div>
         <DrawerFooter>
           {variant === "create" && (
-            <Button form="form-drawer" type="submit">
+            <Button
+              form="form-drawer"
+              type="submit"
+              disabled={createMemberIsPending}
+            >
+              {createMemberIsPending && (
+                <Loader2Icon className="animate-spin" />
+              )}
               Create
             </Button>
           )}
@@ -152,10 +156,13 @@ export function TableCellViewer({
               </div>
               <Button
                 variant={"destructive"}
-                disabled={!isChecked}
+                disabled={!isChecked || deleteMemberIsPending}
                 form="form-drawer"
                 type="submit"
               >
+                {deleteMemberIsPending && (
+                  <Loader2Icon className="animate-spin" />
+                )}
                 Delete
               </Button>
             </>
