@@ -11,7 +11,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { member } from "@/db/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { TableCellViewer } from "./component";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { Button } from "@/components/ui/button";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -21,7 +21,8 @@ export default async function Page() {
   const memberData = await db
     .select()
     .from(member)
-    .where(eq(member.status, "CREATED"));
+    .where(eq(member.status, "CREATED"))
+    .orderBy(desc(member.lastUpdatedAt));
 
   return (
     <div className="flex flex-1 flex-col">
