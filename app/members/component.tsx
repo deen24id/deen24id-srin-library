@@ -27,6 +27,11 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
 import { useActionState, useEffect, useState } from "react";
 import { deleteMember } from "../actions/delete-member";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function TableCellViewer({
   variant,
@@ -47,17 +52,26 @@ export function TableCellViewer({
 
   return (
     <Drawer direction={isMobile ? "bottom" : "right"}>
-      <DrawerTrigger asChild>
-        <Button
-          variant="outline"
-          className="text-muted-foreground flex size-8"
-          size="icon"
-        >
-          {variant === "edit" && <IconEdit />}
-          {variant === "delete" && <IconTrash />}
-          <span className="sr-only">Open menu</span>
-        </Button>
-      </DrawerTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DrawerTrigger asChild>
+            <Button
+              variant="outline"
+              className="text-muted-foreground flex size-8"
+              size="icon"
+            >
+              {variant === "edit" && <IconEdit />}
+              {variant === "delete" && <IconTrash />}
+            </Button>
+          </DrawerTrigger>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>
+            {variant === "edit" && "Edit Member's Profile"}
+            {variant === "delete" && "Delete a member"}
+          </p>
+        </TooltipContent>
+      </Tooltip>
       <DrawerContent>
         <DrawerHeader className="gap-1">
           {variant === "edit" && <IconEdit />}
