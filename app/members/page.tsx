@@ -11,7 +11,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { member } from "@/db/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { TableCellViewer } from "./component";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, or } from "drizzle-orm";
 import { ButtonRefresh } from "@/components/button-refresh";
 
 const db = drizzle(process.env.DATABASE_URL!);
@@ -20,7 +20,7 @@ export default async function Page() {
   const memberData = await db
     .select()
     .from(member)
-    .where(eq(member.status, "CREATED"))
+    .where(or(eq(member.status, "CREATED"), eq(member.status, "UPDATED")))
     .orderBy(desc(member.lastUpdatedAt));
 
   return (
