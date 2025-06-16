@@ -84,9 +84,6 @@ export function TableCellViewer({
       )}
       <DrawerContent>
         <DrawerHeader className="gap-1">
-          {variant === "create" && <IconPlus />}
-          {variant === "edit" && <IconEdit />}
-          {variant === "delete" && <IconTrash />}
           <DrawerTitle>
             {variant === "create" && "Create a member"}
             {variant === "edit" && "Edit member's profile"}
@@ -94,11 +91,11 @@ export function TableCellViewer({
           </DrawerTitle>
           <DrawerDescription>
             {variant === "create" &&
-              "Fill in the following form to create a member. Some information is required and some is optional. You can also edit them in the future."}
+              "Fill in the following form to create a member."}
             {variant === "edit" &&
-              "Make some changes in the form input(s) to edit the following member's profile. Click save changes to finalize the edit."}
+              "Make some changes to member's attribute(s)."}
             {variant === "delete" &&
-              "You are about to delete a member from the list. Please double check on the member's profile before making the deletion."}
+              "You are about to delete a member from the list."}
           </DrawerDescription>
         </DrawerHeader>
         <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
