@@ -26,6 +26,7 @@ import {
 import { createMember } from "../actions/create-member";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
+import { editMember } from "../actions/edit-member";
 
 export function TableCellViewer({
   variant,
@@ -36,23 +37,47 @@ export function TableCellViewer({
 
   const [isChecked, setIsCheck] = useState(false);
 
-  const [deleteMemberState, deleteMemberAction, deleteMemberIsPending] =
-    useActionState(deleteMember, null);
-
   const [createMemberState, createMemberAction, createMemberIsPending] =
     useActionState(createMember, null);
 
-  const formAction = (formData: FormData) => {
-    console.log(formData.get("name"));
-    console.log(member.name);
+  const [editMemberState, editMemberAction, editMemberIsPending] =
+    useActionState(editMember, null);
 
+  const [deleteMemberState, deleteMemberAction, deleteMemberIsPending] =
+    useActionState(deleteMember, null);
+
+  const formAction = (formData: FormData) => {
     if (variant === "create") {
       createMemberAction(formData);
+    } else if (variant === "edit") {
+      let hasFormChanged = false;
+      for (const key of ["name", "email", "phone", "country", "city"]) {
+        if (member[key as keyof typeof member] !== formData.get(key)) {
+          hasFormChanged = true;
+        }
+      }
+      if (hasFormChanged) {
+        formData.set("id", member.id); //value didn't get passed when input disabled
+        editMemberAction(formData);
+      } else {
+        toast.warning("Please make some changes to the form.");
+      }
     } else if (variant === "delete") {
       formData.set("id", member.id); //value didn't get passed when input disabled
       deleteMemberAction(formData);
     }
   };
+
+  useEffect(() => {
+    if (editMemberState) {
+      if (editMemberState.status === "success") {
+        setIsDrawerOpen(false);
+        toast.success("A member's attribute(s) has been edited.");
+      } else if (editMemberState.status === "error") {
+        toast.error(editMemberState.message);
+      }
+    }
+  }, [editMemberState]);
 
   useEffect(() => {
     if (createMemberState) {
@@ -185,7 +210,12 @@ export function TableCellViewer({
             </Button>
           )}
           {variant === "edit" && (
-            <Button form="form-drawe" type="submit">
+            <Button
+              form="form-drawer"
+              type="submit"
+              disabled={editMemberIsPending}
+            >
+              {editMemberIsPending && <Loader2Icon className="animate-spin" />}
               Save Changes
             </Button>
           )}
