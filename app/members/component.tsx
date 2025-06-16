@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { SelectMember } from "@/db/schema";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { deleteMember } from "../actions/delete-member";
 import {
   Tooltip,
@@ -31,11 +31,13 @@ export function TableCellViewer({
   ...member
 }: { variant: "create" | "edit" | "delete" } & SelectMember) {
   const isMobile = useIsMobile();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const [isChecked, setIsCheck] = useState(false);
 
   const [deleteMemberState, deleteMemberAction, deleteMemberIsPending] =
     useActionState(deleteMember, null);
+
   const [createMemberState, createMemberAction, createMemberIsPending] =
     useActionState(createMember, null);
 
@@ -48,8 +50,20 @@ export function TableCellViewer({
     }
   };
 
+  useEffect(() => {
+    if (createMemberState) {
+      if (createMemberState.status === "success") {
+        setIsDrawerOpen(false);
+      }
+    }
+  }, [createMemberState]);
+
   return (
-    <Drawer direction={isMobile ? "bottom" : "right"}>
+    <Drawer
+      direction={isMobile ? "bottom" : "right"}
+      open={isDrawerOpen}
+      onOpenChange={setIsDrawerOpen}
+    >
       {variant === "create" ? (
         <DrawerTrigger asChild>
           <Button variant="outline">
