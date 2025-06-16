@@ -27,6 +27,7 @@ import { createMember } from "../actions/create-member";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 import { editMember } from "../actions/edit-member";
+import { useLocaleDatetime } from "@/hooks/use-locale-datetime";
 
 export function TableCellViewer({
   variant,
@@ -89,6 +90,8 @@ export function TableCellViewer({
       }
     }
   }, [createMemberState]);
+
+  const uld = useLocaleDatetime();
 
   return (
     <Drawer
@@ -194,6 +197,17 @@ export function TableCellViewer({
                 <Input id="city" name="city" defaultValue={member.city || ""} />
               </div>
             </div>
+            {variant !== "create" && (
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="lastUpdatedAt">Last Updated At</Label>
+                <Input
+                  id="lastUpdatedAt"
+                  name="lastUpdatedAt"
+                  defaultValue={uld(member.lastUpdatedAt)}
+                  disabled
+                />
+              </div>
+            )}
           </form>
         </div>
         <DrawerFooter>

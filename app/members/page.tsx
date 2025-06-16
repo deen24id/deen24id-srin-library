@@ -13,6 +13,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { TableCellViewer } from "./component";
 import { eq, desc, or } from "drizzle-orm";
 import { ButtonRefresh } from "@/components/button-refresh";
+import LocaleDatetime from "@/components/ui/LocaleDatetime";
 
 const db = drizzle(process.env.DATABASE_URL!);
 
@@ -59,6 +60,7 @@ export default async function Page() {
                       <TableHead>Phone</TableHead>
                       <TableHead>Country</TableHead>
                       <TableHead>City</TableHead>
+                      <TableHead>Last Updated At</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -77,6 +79,9 @@ export default async function Page() {
                         <TableCell>{val.phone}</TableCell>
                         <TableCell>{val.country}</TableCell>
                         <TableCell>{val.city}</TableCell>
+                        <TableCell>
+                          {<LocaleDatetime datetime={val.lastUpdatedAt} />}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
