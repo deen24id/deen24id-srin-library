@@ -23,6 +23,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { createMember } from "../actions/create-member";
 
 export function TableCellViewer({
   variant,
@@ -32,11 +33,20 @@ export function TableCellViewer({
 
   const [isChecked, setIsCheck] = useState(false);
 
-  const [state, deleteMemberAction] = useActionState(deleteMember, null);
+  const [deleteMemberState, deleteMemberAction] = useActionState(
+    deleteMember,
+    null
+  );
+  const [createMemberState, createMemberAction] = useActionState(
+    createMember,
+    null
+  );
 
   const formAction = (formData: FormData) => {
-    formData.set("id", member.id); //value didn't get passed when input disabled
-    if (variant === "delete") {
+    if (variant === "create") {
+      createMemberAction(formData);
+    } else if (variant === "delete") {
+      formData.set("id", member.id); //value didn't get passed when input disabled
       deleteMemberAction(formData);
     }
   };
