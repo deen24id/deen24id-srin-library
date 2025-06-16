@@ -22,10 +22,6 @@ export async function deleteMember(
       })
       .where(eq(member.id, formData.get("id") as string));
 
-    console.log(formData.entries());
-
-    console.log(formData.get("id"));
-
     revalidatePath("/members");
 
     console.log("MEMBER DELETED!");
