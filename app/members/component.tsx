@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SelectMember } from "@/db/schema";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useActionState, useState } from "react";
 import { deleteMember } from "../actions/delete-member";
 import {
@@ -27,7 +27,7 @@ import {
 export function TableCellViewer({
   variant,
   ...member
-}: { variant: "edit" | "delete" } & SelectMember) {
+}: { variant: "create" | "edit" | "delete" } & SelectMember) {
   const isMobile = useIsMobile();
 
   const [isChecked, setIsCheck] = useState(false);
@@ -43,35 +43,48 @@ export function TableCellViewer({
 
   return (
     <Drawer direction={isMobile ? "bottom" : "right"}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DrawerTrigger asChild>
-            <Button
-              variant="outline"
-              className="text-muted-foreground flex size-8"
-              size="icon"
-            >
-              {variant === "edit" && <IconEdit />}
-              {variant === "delete" && <IconTrash />}
-            </Button>
-          </DrawerTrigger>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>
-            {variant === "edit" && "Edit Member's Profile"}
-            {variant === "delete" && "Delete a member"}
-          </p>
-        </TooltipContent>
-      </Tooltip>
+      {variant === "create" ? (
+        <DrawerTrigger asChild>
+          <Button variant="outline">
+            <IconPlus />
+            <span>Create a member</span>
+          </Button>
+        </DrawerTrigger>
+      ) : (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DrawerTrigger asChild>
+              <Button
+                variant="outline"
+                className="text-muted-foreground flex size-8"
+                size="icon"
+              >
+                {variant === "edit" && <IconEdit />}
+                {variant === "delete" && <IconTrash />}
+              </Button>
+            </DrawerTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>
+              {variant === "edit" && "Edit member's profile"}
+              {variant === "delete" && "Delete a member"}
+            </p>
+          </TooltipContent>
+        </Tooltip>
+      )}
       <DrawerContent>
         <DrawerHeader className="gap-1">
+          {variant === "create" && <IconPlus />}
           {variant === "edit" && <IconEdit />}
           {variant === "delete" && <IconTrash />}
           <DrawerTitle>
-            {variant === "edit" && "Edit Member's Profile"}
+            {variant === "create" && "Create a member"}
+            {variant === "edit" && "Edit member's profile"}
             {variant === "delete" && "Delete a member"}
           </DrawerTitle>
           <DrawerDescription>
+            {variant === "create" &&
+              "Fill in the following form to create a member. Some information is required and some is optional. You can also edit them in the future."}
             {variant === "edit" &&
               "Make some changes in the form input(s) to edit the following member's profile. Click save changes to finalize the edit."}
             {variant === "delete" &&
@@ -84,21 +97,23 @@ export function TableCellViewer({
             className="flex flex-col gap-4"
             action={formAction}
           >
-            <div className="flex flex-col gap-3">
-              <Label htmlFor="id">ID</Label>
-              <Input name="id" defaultValue={member.id} disabled />
-            </div>
+            {variant !== "create" && (
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="id">ID</Label>
+                <Input name="id" defaultValue={member.id} disabled />
+              </div>
+            )}
             <div className="flex flex-col gap-3">
               <Label htmlFor="name">Name</Label>
-              <Input name="name" defaultValue={member.name} />
+              <Input name="name" defaultValue={member.name} required />
             </div>
             <div className="flex flex-col gap-3">
               <Label htmlFor="email">Email</Label>
-              <Input name="email" defaultValue={member.email} />
+              <Input name="email" defaultValue={member.email} required />
             </div>
             <div className="flex flex-col gap-3">
               <Label htmlFor="phone">Phone</Label>
-              <Input name="phone" defaultValue={member.phone} />
+              <Input name="phone" defaultValue={member.phone} required />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
@@ -113,6 +128,11 @@ export function TableCellViewer({
           </form>
         </div>
         <DrawerFooter>
+          {variant === "create" && (
+            <Button form="form-drawer" type="submit">
+              Create
+            </Button>
+          )}
           {variant === "edit" && <Button type="submit">Save Changes</Button>}
           {variant === "delete" && (
             <>

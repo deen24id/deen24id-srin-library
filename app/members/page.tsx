@@ -12,6 +12,8 @@ import { member } from "@/db/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { TableCellViewer } from "./component";
 import { eq } from "drizzle-orm";
+import { Button } from "@/components/ui/button";
+import { IconPlus } from "@tabler/icons-react";
 
 const db = drizzle(process.env.DATABASE_URL!);
 
@@ -25,6 +27,19 @@ export default async function Page() {
     <div className="flex flex-1 flex-col">
       <div className="@container/main flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+          <div className="flex justify-end px-4 lg:px-6">
+            <TableCellViewer
+              variant="create"
+              name=""
+              id={""}
+              status={null}
+              email={""}
+              phone={""}
+              country={null}
+              city={null}
+              lastUpdatedAt={""}
+            />
+          </div>
           <Tabs
             defaultValue="outline"
             className="w-full flex-col justify-start gap-6"
