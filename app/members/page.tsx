@@ -12,8 +12,6 @@ import { member } from "@/db/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { TableCellViewer } from "./component";
 import { eq, desc } from "drizzle-orm";
-import { Button } from "@/components/ui/button";
-import { IconPlus } from "@tabler/icons-react";
 
 const db = drizzle(process.env.DATABASE_URL!);
 
