@@ -13,19 +13,10 @@ import {
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { SeparatorFull } from "@/components/ui/separator";
-import { H1 } from "@/components/ui/typography";
 import { SelectMember } from "@/db/schema";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
-import { useActionState, useEffect, useState } from "react";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { useActionState, useState } from "react";
 import { deleteMember } from "../actions/delete-member";
 import {
   Tooltip,
