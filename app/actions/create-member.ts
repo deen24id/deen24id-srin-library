@@ -35,6 +35,6 @@ export async function createMember(
   } catch (err) {
     console.error(err);
 
-    return { status: "error" };
+    return { status: "error", message: JSON.stringify(err) };
   }
 }

@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/tooltip";
 import { createMember } from "../actions/create-member";
 import { Loader2Icon } from "lucide-react";
+import { toast } from "sonner";
 
 export function TableCellViewer({
   variant,
@@ -54,6 +55,9 @@ export function TableCellViewer({
     if (createMemberState) {
       if (createMemberState.status === "success") {
         setIsDrawerOpen(false);
+        toast.success("A new member was successfully created.");
+      } else if (createMemberState.status === "error") {
+        toast.error(createMemberState.message);
       }
     }
   }, [createMemberState]);
