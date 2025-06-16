@@ -100,7 +100,7 @@ export function TableCellViewer({
         <DrawerTrigger asChild>
           <Button variant="outline">
             <IconPlus />
-            <span>Create a member</span>
+            <span className="hidden lg:inline">Create a member</span>
           </Button>
         </DrawerTrigger>
       ) : (
