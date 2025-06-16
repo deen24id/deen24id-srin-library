@@ -22,7 +22,8 @@ export default async function Page() {
     .select()
     .from(member)
     .where(or(eq(member.status, "CREATED"), eq(member.status, "UPDATED")))
-    .orderBy(desc(member.lastUpdatedAt));
+    .orderBy(desc(member.lastUpdatedAt))
+    .limit(10);
 
   return (
     <div className="flex flex-1 flex-col">
