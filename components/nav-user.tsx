@@ -41,7 +41,7 @@ export function NavUser({
     <SidebarMenu>
       <SidebarMenuItem>
         <Link
-          href="https://deen24id.artidata.io"
+          href="mailto:deen24id@gmail.com"
           rel="noopener noreferrer"
           target="_blank"
         >
