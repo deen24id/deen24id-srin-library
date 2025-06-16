@@ -2,11 +2,9 @@
 "use server";
 
 import { drizzle } from "drizzle-orm/neon-http";
-import { eq } from "drizzle-orm";
-
-import { member } from "@/db/schema";
+import { eq, sql } from "drizzle-orm";
+import { member, stats } from "@/db/schema";
 import { revalidatePath } from "next/cache";
-import { date } from "drizzle-orm/mysql-core";
 
 const db = drizzle(process.env.DATABASE_URL!, { logger: true });
 
@@ -16,7 +14,7 @@ export async function editMember(
   formData: FormData
 ) {
   try {
-    const data = await db
+    const dataMember = await db
       .update(member)
       .set({
         name: formData.get("name") as string,
@@ -29,10 +27,22 @@ export async function editMember(
       })
       .where(eq(member.id, formData.get("id") as string));
 
+    const dataStatsCreated = await db
+      .update(stats)
+      .set({ amount: sql`${stats.amount} - 1` })
+      .where(eq(stats.name, "member-total-CREATED"));
+
+    const dataStatsUpdated = await db
+      .update(stats)
+      .set({ amount: sql`${stats.amount} + 1` })
+      .where(eq(stats.name, "member-total-UPDATED"));
+
     revalidatePath("/members");
 
     console.log("MEMBER UPDATED!");
-    console.log(data);
+    console.log(dataMember);
+    console.log(dataStatsCreated);
+    console.log(dataStatsUpdated);
 
     return { status: "success" };
   } catch (err) {

@@ -8,7 +8,7 @@ const db = drizzle(process.env.DATABASE_URL!);
 async function main() {
   await seed(db, { member }).refine((f) => ({
     member: {
-      count: 100,
+      count: 2400,
       columns: {
         status: f.default({ defaultValue: "CREATED" }),
         name: f.fullName(),

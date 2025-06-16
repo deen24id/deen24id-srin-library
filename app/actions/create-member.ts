@@ -1,8 +1,9 @@
 "use server";
 
 import { drizzle } from "drizzle-orm/neon-http";
-import { member } from "@/db/schema";
+import { member, stats } from "@/db/schema";
 import { revalidatePath } from "next/cache";
+import { eq, sql } from "drizzle-orm";
 
 const db = drizzle(process.env.DATABASE_URL!);
 
@@ -23,13 +24,27 @@ export async function createMember(
       city: formData.get("city") as string,
       status: "CREATED",
     };
-    const data = await db.insert(member).values(memberEntry);
+    const dataMember = await db.insert(member).values(memberEntry);
+    const dataStats = await db
+      .update(stats)
+      .set({ amount: sql`${stats.amount} + 1` })
+      .where(eq(stats.name, "member-total-CREATED"));
+
+    // Transaction seems to be unstable canceling data revalidation
+    // const data = db.transaction(async (tx) => {
+    //   await tx.insert(member).values(memberEntry);
+    //   await tx
+    //     .update(stats)
+    //     .set({ amount: sql`${stats.amount} + 100.00` })
+    //     .where(eq(stats.name, "member-total-CREATED"));
+    // });
+
+    revalidatePath("/members");
 
     console.log("NEW MEMBER CREATED!");
     console.log(memberEntry);
-    console.log(data);
-
-    revalidatePath("/members");
+    console.log(dataMember);
+    console.log(dataStats);
 
     return { status: "success" };
   } catch (err) {
