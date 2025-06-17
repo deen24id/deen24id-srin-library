@@ -30,16 +30,37 @@ import {
 } from "@tabler/icons-react";
 import { table } from "console";
 import { Label } from "recharts";
+import { redirect } from "next/navigation";
 
 const db = drizzle(process.env.DATABASE_URL!);
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const searchParamsData = await searchParams;
+
+  if (
+    typeof searchParamsData["page"] !== "string" ||
+    isNaN(parseInt(searchParamsData["page"]))
+  ) {
+    redirect("/members?page=1");
+  }
+
+  const pageNumber = parseInt(searchParamsData["page"]);
+
+  if (pageNumber != parseFloat(searchParamsData["page"])) {
+    redirect("/members?page=" + pageNumber);
+  }
+
   const memberData = await db
     .select()
     .from(member)
     .where(or(eq(member.status, "CREATED"), eq(member.status, "UPDATED")))
     .orderBy(desc(member.lastUpdatedAt))
-    .limit(10);
+    .limit(10)
+    .offset((pageNumber - 1) * 10);
 
   const totalRows = await db
     .select({ value: sum(stats.amount) })
@@ -50,8 +71,6 @@ export default async function Page() {
         eq(stats.name, "member-total-UPDATED")
       )
     );
-
-  console.log(totalRows[0].value);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -121,7 +140,8 @@ export default async function Page() {
               </div>
               <div className="flex items-center justify-between px-4">
                 <div className="text-muted-foreground flex-1 text-sm lg:flex">
-                  1-10 of {totalRows[0].value} entries.
+                  {pageNumber * 10 - 9}-{pageNumber * 10} of{" "}
+                  {totalRows[0].value} entries.
                 </div>
                 {/* <div className="flex w-full items-center gap-8 lg:w-fit">
                             <div className="hidden items-center gap-2 lg:flex">
