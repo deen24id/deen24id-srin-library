@@ -121,7 +121,7 @@ export default async function Page() {
               </div>
               <div className="flex items-center justify-between px-4">
                 <div className="text-muted-foreground flex-1 text-sm lg:flex">
-                  1-10 of {totalRows[0].value} rows.
+                  1-10 of {totalRows[0].value} entries.
                 </div>
                 {/* <div className="flex w-full items-center gap-8 lg:w-fit">
                             <div className="hidden items-center gap-2 lg:flex">
