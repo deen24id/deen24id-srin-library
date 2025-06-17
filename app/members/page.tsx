@@ -43,7 +43,8 @@ export default async function Page({
 
   if (
     typeof searchParamsData["page"] !== "string" ||
-    isNaN(parseInt(searchParamsData["page"]))
+    isNaN(parseInt(searchParamsData["page"])) ||
+    parseInt(searchParamsData["page"]) <= 0
   ) {
     redirect("/members?page=1");
   }
