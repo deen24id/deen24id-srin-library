@@ -14,7 +14,7 @@ import { TableCellViewer } from "./component";
 import { eq, desc, or, sum } from "drizzle-orm";
 import { ButtonRefresh } from "@/components/button-refresh";
 import LocaleDatetime from "@/components/ui/LocaleDatetime";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   IconChevronsLeft,
   IconChevronLeft,
@@ -24,6 +24,9 @@ import {
 import { redirect } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import Form from "next/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const db = drizzle(process.env.DATABASE_URL!);
 
@@ -136,12 +139,24 @@ export default async function Page({
                   </TableBody>
                 </Table>
               </div>
-              <div className="flex flex-col-reverse gap-2 lg:flex-row items-center justif-center lg:justify-between">
+              <div className="flex flex-col-reverse gap-4 lg:flex-row items-center justif-center lg:justify-between">
                 <div className="text-sm lg:flex">
                   Displaying {(pageNumber - 1) * 10 + 1}-
                   {(pageNumber - 1) * 10 + memberData.length} of {totalEntries}{" "}
                   entries.
                 </div>
+                <Form action="/members" className="flex items-center gap-2">
+                  <Label htmlFor="page">Page:</Label>
+                  <Input
+                    type="text"
+                    name="page"
+                    defaultValue={pageNumber}
+                    size={1}
+                  />
+                  <Button variant="outline" size="icon" type="submit">
+                    Go
+                  </Button>
+                </Form>
                 <div className="w-full items-center gap-8 lg:w-fit">
                   <div className="flex items-center justify-center gap-2">
                     <Link
