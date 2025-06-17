@@ -14,23 +14,16 @@ import { TableCellViewer } from "./component";
 import { eq, desc, or, sum } from "drizzle-orm";
 import { ButtonRefresh } from "@/components/button-refresh";
 import LocaleDatetime from "@/components/ui/LocaleDatetime";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@radix-ui/react-select";
+import { buttonVariants } from "@/components/ui/button";
 import {
   IconChevronsLeft,
   IconChevronLeft,
   IconChevronRight,
   IconChevronsRight,
 } from "@tabler/icons-react";
-import { table } from "console";
-import { Label } from "recharts";
 import { redirect } from "next/navigation";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const db = drizzle(process.env.DATABASE_URL!);
 
@@ -55,15 +48,7 @@ export default async function Page({
     redirect("/members?page=" + pageNumber);
   }
 
-  const memberData = await db
-    .select()
-    .from(member)
-    .where(or(eq(member.status, "CREATED"), eq(member.status, "UPDATED")))
-    .orderBy(desc(member.lastUpdatedAt))
-    .limit(10)
-    .offset((pageNumber - 1) * 10);
-
-  const totalRows = await db
+  const statsData = await db
     .select({ value: sum(stats.amount) })
     .from(stats)
     .where(
@@ -72,6 +57,21 @@ export default async function Page({
         eq(stats.name, "member-total-UPDATED")
       )
     );
+
+  const totalEntries = parseInt(statsData[0].value ?? "0");
+  const totalPage = Math.ceil(totalEntries / 10);
+
+  if (pageNumber > totalPage) {
+    redirect("/members?page=" + totalPage);
+  }
+
+  const memberData = await db
+    .select()
+    .from(member)
+    .where(or(eq(member.status, "CREATED"), eq(member.status, "UPDATED")))
+    .orderBy(desc(member.lastUpdatedAt))
+    .limit(10)
+    .offset((pageNumber - 1) * 10);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -134,87 +134,56 @@ export default async function Page({
                       </TableRow>
                     ))}
                   </TableBody>
-                  {/* <TableCaption className="text-right">
-              Last updated at: {<LocaleDatetime datetime={lastUpdatedAt} />}
-            </TableCaption> */}
                 </Table>
               </div>
-              <div className="flex items-center justify-between px-4">
-                <div className="text-muted-foreground flex-1 text-sm lg:flex">
-                  {pageNumber * 10 - 9}-{pageNumber * 10} of{" "}
-                  {totalRows[0].value} entries.
+              <div className="flex flex-col-reverse gap-2 lg:flex-row items-center justif-center lg:justify-between">
+                <div className="text-sm lg:flex">
+                  Displaying {(pageNumber - 1) * 10 + 1}-
+                  {(pageNumber - 1) * 10 + memberData.length} of {totalEntries}{" "}
+                  entries.
                 </div>
-                {/* <div className="flex w-full items-center gap-8 lg:w-fit">
-                            <div className="hidden items-center gap-2 lg:flex">
-                              <Label htmlFor="rows-per-page" className="text-sm font-medium">
-                                Rows per page
-                              </Label>
-                              <Select
-                                value={`${table.getState().pagination.pageSize}`}
-                                onValueChange={(value) => {
-                                  table.setPageSize(Number(value))
-                                }}
-                              >
-                                <SelectTrigger size="sm" className="w-20" id="rows-per-page">
-                                  <SelectValue
-                                    placeholder={table.getState().pagination.pageSize}
-                                  />
-                                </SelectTrigger>
-                                <SelectContent side="top">
-                                  {[10, 20, 30, 40, 50].map((pageSize) => (
-                                    <SelectItem key={pageSize} value={`${pageSize}`}>
-                                      {pageSize}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            <div className="flex w-fit items-center justify-center text-sm font-medium">
-                              Page {table.getState().pagination.pageIndex + 1} of{" "}
-                              {table.getPageCount()}
-                            </div>
-                            <div className="ml-auto flex items-center gap-2 lg:ml-0">
-                              <Button
-                                variant="outline"
-                                className="hidden h-8 w-8 p-0 lg:flex"
-                                onClick={() => table.setPageIndex(0)}
-                                disabled={!table.getCanPreviousPage()}
-                              >
-                                <span className="sr-only">Go to first page</span>
-                                <IconChevronsLeft />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                className="size-8"
-                                size="icon"
-                                onClick={() => table.previousPage()}
-                                disabled={!table.getCanPreviousPage()}
-                              >
-                                <span className="sr-only">Go to previous page</span>
-                                <IconChevronLeft />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                className="size-8"
-                                size="icon"
-                                onClick={() => table.nextPage()}
-                                disabled={!table.getCanNextPage()}
-                              >
-                                <span className="sr-only">Go to next page</span>
-                                <IconChevronRight />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                className="hidden size-8 lg:flex"
-                                size="icon"
-                                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                                disabled={!table.getCanNextPage()}
-                              >
-                                <span className="sr-only">Go to last page</span>
-                                <IconChevronsRight />
-                              </Button>
-                            </div>
-                          </div> */}
+                <div className="w-full items-center gap-8 lg:w-fit">
+                  <div className="flex items-center justify-center gap-2">
+                    <Link
+                      href={`/members?page=${pageNumber - 10}`}
+                      className={cn(
+                        buttonVariants({ variant: "outline", size: "icon" }),
+                        pageNumber <= 10 && "pointer-events-none opacity-50"
+                      )}
+                    >
+                      <IconChevronsLeft />
+                    </Link>
+                    <Link
+                      href={`/members?page=${pageNumber - 1}`}
+                      className={cn(
+                        buttonVariants({ variant: "outline", size: "icon" }),
+                        pageNumber <= 1 && "pointer-events-none opacity-50"
+                      )}
+                    >
+                      <IconChevronLeft />
+                    </Link>
+                    <Link
+                      href={`/members?page=${pageNumber + 1}`}
+                      className={cn(
+                        buttonVariants({ variant: "outline", size: "icon" }),
+                        pageNumber >= totalPage &&
+                          "pointer-events-none opacity-50"
+                      )}
+                    >
+                      <IconChevronRight />
+                    </Link>
+                    <Link
+                      href={`/members?page=${pageNumber + 10}`}
+                      className={cn(
+                        buttonVariants({ variant: "outline", size: "icon" }),
+                        pageNumber >= totalPage - 9 &&
+                          "pointer-events-none opacity-50"
+                      )}
+                    >
+                      <IconChevronsRight />
+                    </Link>
+                  </div>
+                </div>
               </div>
             </TabsContent>
           </Tabs>
