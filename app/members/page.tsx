@@ -152,6 +152,7 @@ export default async function Page({
                     name="page"
                     defaultValue={pageNumber}
                     size={1}
+                    className="text-center"
                   />
                   <Button variant="outline" size="icon" type="submit">
                     Go
